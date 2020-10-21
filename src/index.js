@@ -4,23 +4,22 @@ let isCorrect;
         isCorrect = false;
     } else {
         const stack = [];
+        const openingBrackets = [];
+        const closingBrackets = [];
         for (let i = 0; i < bracketsConfig.length; i++) {
-            //??? config2 = [['(', ')'], ['[', ']']];
-            let opening = bracketsConfig[i][0];
-            let closing = bracketsConfig[i][1];
-            //TODO | = (|, |)
-            //??? '[(])'
-            for (let char of str) {
-                if (char === opening) {
-                    stack.push(char);
-                } else if (char === closing) {
-                    if (stack.length === 0) {
-                        return false;
-                    } else if (stack[stack.length - 1] === opening) {
-                        stack.pop();
-                    } else {
-                        return false;
-                    }
+            openingBrackets.push(bracketsConfig[i][0]);
+            closingBrackets.push(bracketsConfig[i][1]);
+        }
+        for (let char of str) {
+            if (openingBrackets.includes(char)) {
+                stack.push(char);
+            } else if (closingBrackets.includes(char)) {
+                if (stack.length === 0) {
+                    return false;
+                } else if (stack[stack.length - 1] === openingBrackets[closingBrackets.indexOf(char)]) {
+                    stack.pop();
+                } else {
+                    return false;
                 }
             }
         }
