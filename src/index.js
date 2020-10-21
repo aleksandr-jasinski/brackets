@@ -1,16 +1,29 @@
 module.exports = function check(str, bracketsConfig) {
-let isCorrect;
+const stack = [];
     if (str.length % 2 === 1) {
-        isCorrect = false;
+        return false;
     } else {
-        const stack = [];
-        const openingBrackets = [];
-        const closingBrackets = [];
+        let openingBrackets = [];
+        let closingBrackets = [];
         for (let i = 0; i < bracketsConfig.length; i++) {
-            openingBrackets.push(bracketsConfig[i][0]);
-            closingBrackets.push(bracketsConfig[i][1]);
+            openingBrackets.push(bracketsConfig[i][0] );
+            closingBrackets.push(bracketsConfig[i][1] );
         }
-        for (let char of str) {
+        const arr = str.split('');
+        for (let i = 0; i < arr.length; i++) {
+            if (openingBrackets.includes(arr[i]) && arr[i] === closingBrackets[openingBrackets.indexOf(arr[i])] ) {
+                let j = arr.indexOf(arr[i], i+1);
+                arr[j] = 'close' + arr[j];
+                arr[i] = 'open' + arr[i];
+            }
+        }
+        for (let i = 0; i < openingBrackets.length; i++) {
+            if (openingBrackets[i] === closingBrackets[i]) {
+                openingBrackets[i] = 'open' + openingBrackets[i];
+                closingBrackets[i] = 'close' + closingBrackets[i];
+            }
+        }
+        for (let char of arr) {
             if (openingBrackets.includes(char)) {
                 stack.push(char);
             } else if (closingBrackets.includes(char)) {
@@ -18,20 +31,9 @@ let isCorrect;
                     return false;
                 } else if (stack[stack.length - 1] === openingBrackets[closingBrackets.indexOf(char)]) {
                     stack.pop();
-                } else {
-                    return false;
                 }
             }
         }
-
-        if (stack.length === 0) {
-        isCorrect = true;
-        } else {
-        console.log(stack.length);
-        console.log(stack);
-        isCorrect = false;
-        }
-
     }
-return isCorrect;
+return Boolean(stack.length === 0);
 }
